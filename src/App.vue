@@ -1,34 +1,41 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <!-- <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a> --> 
-
-   
-  <h1 class="text-lg text-blue-500">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Distinctio facere culpa aliquam quaerat numquam. Quisquam ratione corrupti explicabo beatae dicta iusto corporis, deleniti officia omnis recusandae soluta eum quae perferendis?</h1>    
-
+  <div class="min-h-screen bg-gray-50 flex flex-col items-center">
+    <!-- <header class="w-full py-4 bg-blue-600 text-white text-center font-bold text-2xl">
+      My Application
+    </header> -->
+    <main class="flex flex-col items-center w-full max-w-4xl p-6 space-y-4">
+      <!-- Komponen Dashboard dengan slot -->
+      <!-- <Dashboard
+        :Hari="Days"
+        Text="Welcome to the Dashboard"
+        Color="secondary"
+        class="w-full border border-gray-300 p-4 rounded-lg bg-white shadow-md"
+      >
+        <p>This content is from App.vue</p>
+      </Dashboard> -->
+      
+      <!-- Komponen Login -->
+      <Login class="w-full max-w-md"/>
+    </main>
   </div>
-  <!-- <HelloWorld msg="Vite + Vue" /> -->
 </template>
 
+<script>
+import Dashboard from "./components/Dashboard.vue";
+import Login from "./components/Auth/Login.vue";
+
+export default {
+  components: {
+    Dashboard,
+    Login,
+  },
+  setup() {
+    const Days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    return { Days };
+  },
+};
+</script>
+
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+/* Optional custom styles */
 </style>
