@@ -75,7 +75,10 @@ export default {
       stateshowModal.value = !stateshowModal.value;
     };
 
-    return { MyData, stateshowModal, arrays, showModal };
+    // Ambil email dari localStorage
+    // const email = localStorage.getItem("email");
+
+    return { MyData, stateshowModal, arrays, showModal};
   },
 };
 </script>
