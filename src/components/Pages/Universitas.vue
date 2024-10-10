@@ -1,12 +1,21 @@
 <template>
     <div class="container mx-auto p-6">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-        
+        <br>
         <!-- Tombol untuk menambah universitas -->
         <div class="text-left mb-4">
             <button @click="openModal" class="bg-blue-500 text-white px-4 py-2 rounded" title="Tambah Universitas">
                 <i class="fas fa-plus"></i>
             </button>
+        </div>
+
+        <!-- Input Pencarian -->
+        <div class="mb-4 flex justify-end">
+            <input 
+                v-model="searchQuery" 
+                type="text" 
+                placeholder="Cari Universitas..." 
+                class="w-1/4 p-1 border rounded shadow">
         </div>
 
         <!-- Modal untuk tambah/edit universitas -->
@@ -42,15 +51,15 @@
                     </tr>
                 </thead>
                 <tbody class="hover">
-                    <tr v-for="(university, index) in paginatedUniversities" :key="university.id" class="hover:bg-gray-50">
-                        <td class="border-b py-2 px-4 text-center">{{ index + 1 + ((currentPage - 1) * perPage) }}</td>
+                    <tr v-for="(university, index) in filteredUniversities" :key="university.id" class="hover:bg-gray-50">
+                        <td class="border-b py-2 px-4 text-center">{{ index + 1 + (currentPage - 1) * perPage }}</td>
                         <td class="border-b py-2 px-4 text-center">{{ university.id }}</td>
                         <td class="border-b py-2 px-4 text-center">{{ university.name }}</td>
                         <td class="border-b py-2 px-4 text-center">
-                            <button @click="editUniversity(university)" class="btn btn-sm btn-warning m-2" title="Edit">
+                            <button @click="editUniversity(university)" class="btn btn-sm btn-warning mr-2" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button @click="confirmDelete(university.id)" class="btn btn-sm btn-error m-2" title="Delete">
+                            <button @click="confirmDelete(university.id)" class="btn btn-sm btn-error" title="Delete">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </td>
@@ -67,7 +76,7 @@
                 :class="{'opacity-50 cursor-not-allowed': currentPage === 1}">
                 Previous
             </button>
-        <span class="px-3 py-1 mx-1">{{ currentPage }}</span>
+            <span class="px-3 py-1 mx-1">{{ currentPage }} / {{ totalPages }}</span> <!-- Menambahkan total halaman -->
             <button 
                 @click="changePage(currentPage + 1)" 
                 :disabled="currentPage === totalPages || totalItems <= perPage" 
@@ -76,6 +85,7 @@
                 Next
             </button>
         </div>
+
     </div>
 </template>
 
@@ -91,24 +101,29 @@ export default {
                 id: '',
                 name: ''
             },
+            searchQuery: '', // State untuk input pencarian
             isEditing: false,
             currentPage: 1,
             perPage: 5,
             totalItems: 0,
+            totalPages: 0,
         };
-    },
-    computed: {
-        paginatedUniversities() {
-            const start = (this.currentPage - 1) * this.perPage;
-            return this.universities.slice(start, start + this.perPage);
-        },
-        totalPages() {
-            return Math.ceil(this.totalItems / this.perPage);
-        }
     },
     mounted() {
         this.fetchUniversities();
     },
+
+    computed: {
+        filteredUniversities() {
+            const filtered = this.universities.filter(university => 
+                university.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+            );
+            this.totalItems = filtered.length; // Update total item setelah filtering
+            this.totalPages = Math.ceil(this.totalItems / this.perPage); // Update total halaman
+            return filtered.slice((this.currentPage - 1) * this.perPage, this.currentPage * this.perPage);
+        },
+    },
+
     methods: {
         fetchUniversities() {
             axios
@@ -119,10 +134,26 @@ export default {
                 })
                 .then((response) => {
                     this.universities = response.data.data;
-                    this.totalItems = this.universities.length;
+                    this.totalItems = this.universities.length; // Menghitung total item
+                    this.totalPages = Math.ceil(this.totalItems / this.perPage); // Menghitung total halaman
+                    this.changePage(1);
                 })
                 .catch((error) => {
                     console.error('Error fetching data:', error);
+                });
+        },
+        fetchUniversityById(id) {
+            return axios
+                .get(`https://localhost:7241/api/University/${id}`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token1')
+                    }
+                })
+                .then((response) => {
+                    return response.data.data;
+                })
+                .catch((error) => {
+                    console.error('Error fetching university by ID:', error);
                 });
         },
         changePage(page) {
@@ -130,6 +161,7 @@ export default {
                 this.currentPage = page;
             }
         },
+
         openModal() {
             this.clearForm();
             this.isEditing = false;
@@ -169,7 +201,7 @@ export default {
             this.isEditing = true;
             this.fetchUniversityById(university.id).then((data) => {
                 this.university = data;
-                this.$refs.myModal.showModal();
+                this.$refs.myModal.showModal(); // Tampilkan modal setelah data berhasil diambil
             });
         },
         updateUniversity() {
@@ -191,11 +223,11 @@ export default {
         },
         confirmDelete(id) {
             Swal.fire({
-                title: 'Yakin ingin menghapus?',
-                text: 'Data ini akan dihapus secara permanen!',
+                title: 'Konfirmasi Hapus',
+                text: 'Anda yakin ingin menghapus universitas ini?',
                 icon: 'warning',
-                showCancelButton: false,
-                confirmButtonText: 'Ya, hapus',
+                showCancelButton: true,
+                confirmButtonText: 'Hapus',
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -212,22 +244,19 @@ export default {
                 })
                 .then(() => {
                     this.fetchUniversities();
-                    Swal.fire('Dihapus!', 'Universitas berhasil dihapus!', 'success');
+                    Swal.fire('Berhasil', 'Universitas berhasil dihapus!', 'success');
                 })
                 .catch((error) => {
                     console.error('Error deleting university:', error);
                     Swal.fire('Gagal', 'Gagal menghapus universitas!', 'error');
                 });
-        }
-    }
+        },
+    },
 };
 </script>
 
 <style scoped>
-.table-auto {
-    width: 100%;
-}
-.btn {
-    padding: 0.5rem 1rem;
+.hover\:bg-gray-50:hover {
+    background-color: #f7fafc;
 }
 </style>
