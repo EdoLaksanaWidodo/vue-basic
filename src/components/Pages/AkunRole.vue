@@ -8,7 +8,7 @@
           type="text"
           v-model="searchQuery"
           placeholder="Search..."
-          class="w-1/4 p-1 border rounded shadow"
+          class="w-1/4 p-1 border rounded shadow bg-white"
         />
       </div>
       

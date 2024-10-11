@@ -39,12 +39,6 @@
             </tbody>
           </table>
         </div>
-
-        <!-- <div class="flex flex-col space-y-2 mt-4">
-          <p class="text-gray-600">Hari: {{ Hari }}</p>
-          <p class="text-gray-600">Text: {{ Text }}</p>
-          <p class="text-gray-600">Color: {{ Color }}</p>
-        </div> -->
       </div>
     </div>
   </div>

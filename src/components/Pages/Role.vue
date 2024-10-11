@@ -4,9 +4,12 @@
         <br>
         <!-- Tombol untuk menambah universitas -->
         <div class="text-left mb-4">
-            <button @click="openModal" class="bg-blue-500 text-white px-4 py-2 rounded" title="Tambah Roles">
+            <div class="relative inline-block">
+                <button @click="openModal" class="bg-blue-500 text-white px-4 py-2 rounded" title="Tambah Roles">
                 <i class="fas fa-plus"></i>
-            </button>
+                <span class="tooltip">Tambah Data</span>
+                </button>
+            </div>
         </div>
         <!-- Input untuk mencari roles -->
         <div class="mb-4 flex justify-end">
@@ -15,7 +18,7 @@
                 v-model="searchQuery" 
                 type="text" 
                 placeholder="Cari berdasarkan nama roles" 
-                class="w-1/4 p-1 border rounded shadow">
+                class="w-1/4 p-1 border rounded shadow bg-white">
         </div>
 
         <!-- Modal untuk tambah/edit roles -->
@@ -56,12 +59,18 @@
                         <td class="border-b py-2 px-4 text-center">{{ role.roleId }}</td>
                         <td class="border-b py-2 px-4 text-center">{{ role.roleName }}</td>
                         <td class="border-b py-2 px-4 text-center">
+                        <div class="relative inline-block">
+                            <span class="tooltip">Edit</span>
                             <button @click="editRole(role)" class="btn btn-sm btn-warning mr-2" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </button>
+                        </div>
+                        <div class="relative inline-block">
+                            <span class="tooltip">Delete</span>
                             <button @click="confirmDelete(role.roleId)" class="btn btn-sm btn-error" title="Delete">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
+                        </div>
                         </td>
                     </tr>
                 </tbody>
@@ -199,19 +208,21 @@ export default {
         updateRole() {
             axios
                 .put(`https://localhost:7241/api/Role/${this.role.roleId}`, this.role, {
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token1')
-                    }
-                })
-                .then((response) => {
-                    const index = this.roles.findIndex(r => r.roleId === this.role.roleId);
-                    this.$set(this.roles, index, response.data.data);
-                    this.closeModal();
-                    Swal.fire('Success', 'Role updated successfully!', 'success');
-                })
-                .catch((error) => {
-                    console.error('Error updating role:', error);
-                });
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token1')
+            }
+        })
+        .then((response) => {
+            const index = this.roles.findIndex(r => r.roleId === this.role.roleId);
+            if (index !== -1) {
+                this.roles[index] = response.data.data;
+            }
+            this.closeModal();
+            Swal.fire('Success', 'Role updated successfully!', 'success');
+        })
+        .catch((error) => {
+            console.error('Error updating role:', error);
+        });
         },
         confirmDelete(roleId) {
             Swal.fire({
@@ -250,5 +261,25 @@ export default {
 <style scoped>
 .modal {
     /* Style untuk modal */
+}
+.tooltip {
+    display: inline-block;
+    position: absolute;
+    bottom: 120%; /* Posisi di atas tombol */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+}
+
+.relative:hover .tooltip {
+    opacity: 1;
 }
 </style>

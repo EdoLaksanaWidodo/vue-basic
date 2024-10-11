@@ -4,9 +4,12 @@
         <br>
         <!-- Tombol untuk menambah universitas -->
         <div class="text-left mb-4">
-            <button @click="openModal" class="bg-blue-500 text-white px-4 py-2 rounded" title="Tambah Universitas">
-                <i class="fas fa-plus"></i>
-            </button>
+            <div class="relative inline-block">
+                <button @click="openModal" class="bg-blue-500 text-white px-4 py-2 rounded" title="Tambah Universitas">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <span class="tooltip">Tambah Data</span>
+            </div>
         </div>
 
         <!-- Input Pencarian -->
@@ -15,7 +18,7 @@
                 v-model="searchQuery" 
                 type="text" 
                 placeholder="Cari Universitas..." 
-                class="w-1/4 p-1 border rounded shadow">
+                class="w-1/4 p-1 border rounded shadow bg-white">
         </div>
 
         <!-- Modal untuk tambah/edit universitas -->
@@ -56,12 +59,18 @@
                         <td class="border-b py-2 px-4 text-center">{{ university.id }}</td>
                         <td class="border-b py-2 px-4 text-center">{{ university.name }}</td>
                         <td class="border-b py-2 px-4 text-center">
-                            <button @click="editUniversity(university)" class="btn btn-sm btn-warning mr-2" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button @click="confirmDelete(university.id)" class="btn btn-sm btn-error" title="Delete">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
+                            <div class="relative inline-block">
+                                <span class="tooltip">Edit</span>
+                                <button @click="editUniversity(university)" class="btn btn-sm btn-warning mr-2" title="Edit">
+                                <i class="fas fa-edit text-white"></i>
+                                </button>
+                            </div>
+                            <div class="relative inline-block">
+                                <span class="tooltip">Hapus</span>
+                                <button @click="confirmDelete(university.id)" class="btn btn-sm btn-error" title="Delete">
+                                <i class="fas fa-trash-alt text-white"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -76,7 +85,7 @@
                 :class="{'opacity-50 cursor-not-allowed': currentPage === 1}">
                 Previous
             </button>
-            <span class="px-3 py-1 mx-1">{{ currentPage }} / {{ totalPages }}</span> <!-- Menambahkan total halaman -->
+            <span class="px-3 py-1 mx-1">{{ currentPage }} / {{ totalPages }}</span>
             <button 
                 @click="changePage(currentPage + 1)" 
                 :disabled="currentPage === totalPages || totalItems <= perPage" 
@@ -201,7 +210,7 @@ export default {
             this.isEditing = true;
             this.fetchUniversityById(university.id).then((data) => {
                 this.university = data;
-                this.$refs.myModal.showModal(); // Tampilkan modal setelah data berhasil diambil
+                this.$refs.myModal.showModal();
             });
         },
         updateUniversity() {
@@ -223,12 +232,14 @@ export default {
         },
         confirmDelete(id) {
             Swal.fire({
-                title: 'Konfirmasi Hapus',
-                text: 'Anda yakin ingin menghapus universitas ini?',
+                title: 'Apakah Anda yakin?',
+                text: 'Data ini akan dihapus secara permanen!',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Hapus',
-                cancelButtonText: 'Batal'
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal',
             }).then((result) => {
                 if (result.isConfirmed) {
                     this.deleteUniversity(id);
@@ -244,7 +255,7 @@ export default {
                 })
                 .then(() => {
                     this.fetchUniversities();
-                    Swal.fire('Berhasil', 'Universitas berhasil dihapus!', 'success');
+                    Swal.fire('Dihapus!', 'Universitas berhasil dihapus.', 'success');
                 })
                 .catch((error) => {
                     console.error('Error deleting university:', error);
@@ -255,8 +266,25 @@ export default {
 };
 </script>
 
-<style scoped>
-.hover\:bg-gray-50:hover {
-    background-color: #f7fafc;
+<style>
+.tooltip {
+    display: inline-block;
+    position: absolute;
+    bottom: 120%; /* Posisi di atas tombol */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+}
+
+.relative:hover .tooltip {
+    opacity: 1;
 }
 </style>
