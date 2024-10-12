@@ -2,6 +2,7 @@
     <div class="container mx-auto p-6">
       <h1 class="text-4xl font-bold text-center mb-6 text-black">Account Role List</h1>
       
+      <div class="bg-white shadow-lg rounded-lg p-6 space-y-6">
       <!-- Input Pencarian -->
       <div class="mb-4 flex justify-end">
         <input
@@ -63,6 +64,7 @@
         </button>
       </div>
     </div>
+  </div>
   </template>
   
   <script>
@@ -72,7 +74,7 @@
       return {
         accountRoles: [],
         currentPage: 1,
-        perPage: 10,
+        perPage: 5,
         totalItems: 0,
         totalPages: 0,
         searchQuery: '',

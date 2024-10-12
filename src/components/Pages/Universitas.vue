@@ -2,10 +2,11 @@
     <div class="container mx-auto p-6">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <br>
+        <div class="bg-white shadow-lg rounded-lg p-6 space-y-6">
         <!-- Tombol untuk menambah universitas -->
         <div class="text-left mb-4">
             <div class="relative inline-block">
-                <button @click="openModal" class="bg-blue-500 text-white px-4 py-2 rounded" title="Tambah Universitas">
+                <button @click="openModal" class="bg-blue-500 text-white px-4 py-2 rounded">
                     <i class="fas fa-plus"></i>
                 </button>
                 <span class="tooltip">Tambah Data</span>
@@ -61,13 +62,13 @@
                         <td class="border-b py-2 px-4 text-center">
                             <div class="relative inline-block">
                                 <span class="tooltip">Edit</span>
-                                <button @click="editUniversity(university)" class="btn btn-sm btn-warning mr-2" title="Edit">
+                                <button @click="editUniversity(university)" class="btn btn-sm btn-warning mr-2">
                                 <i class="fas fa-edit text-white"></i>
                                 </button>
                             </div>
                             <div class="relative inline-block">
                                 <span class="tooltip">Hapus</span>
-                                <button @click="confirmDelete(university.id)" class="btn btn-sm btn-error" title="Delete">
+                                <button @click="confirmDelete(university.id)" class="btn btn-sm btn-error">
                                 <i class="fas fa-trash-alt text-white"></i>
                                 </button>
                             </div>
@@ -94,7 +95,7 @@
                 Next
             </button>
         </div>
-
+    </div>
     </div>
 </template>
 
@@ -287,4 +288,18 @@ export default {
 .relative:hover .tooltip {
     opacity: 1;
 }
+
+
+.sidebar {
+    width: 250px; /* Sesuaikan lebar sidebar */
+    position: fixed; /* Membuat sidebar tetap */
+    height: 100vh;
+    background-color: #2c3e50;
+}
+
+.content {
+    margin-left: 250px; /* Sama dengan lebar sidebar */
+    padding: 20px;
+}
+
 </style>

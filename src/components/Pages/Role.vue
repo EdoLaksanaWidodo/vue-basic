@@ -2,100 +2,100 @@
     <div class="container mx-auto p-6">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
         <br>
-        <!-- Tombol untuk menambah universitas -->
-        <div class="text-left mb-4">
-            <div class="relative inline-block">
-                <button @click="openModal" class="bg-blue-500 text-white px-4 py-2 rounded" title="Tambah Roles">
-                <i class="fas fa-plus"></i>
-                <span class="tooltip">Tambah Data</span>
+        
+        <!-- Wrapper seluruh konten -->
+        <div class="bg-white shadow-lg rounded-lg p-6 space-y-6">
+
+            <!-- Tombol untuk menambah universitas -->
+            <div class="text-left">
+                <button @click="openModal" class="bg-blue-500 text-white px-4 py-2 rounded">
+                    <i class="fas fa-plus"></i>
+                    <span class="tooltip">Tambah Data</span>
                 </button>
             </div>
-        </div>
-        <!-- Input untuk mencari roles -->
-        <div class="mb-4 flex justify-end">
-            <label for="searchInput" class="block text-gray-700 font-semibold mb-2"></label>
-            <input 
-                v-model="searchQuery" 
-                type="text" 
-                placeholder="Cari berdasarkan nama roles" 
-                class="w-1/4 p-1 border rounded shadow bg-white">
-        </div>
 
-        <!-- Modal untuk tambah/edit roles -->
-        <dialog ref="myModal" class="modal">
-            <div class="modal-box">
-                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
-                <form @submit.prevent="submitRole" id="rolesForm" class="m-3">
-                    <div class="mb-4">
-                        <input v-model="role.roleId" type="text" placeholder="ID roles" class="hidden">
-                    </div>
-                    <div class="mb-4">
-                        <label for="inputRoles" class="block text-gray-700 font-semibold mb-2">Nama Roles</label>
-                        <input v-model="role.roleName" type="text" placeholder="Nama Roles" class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div class="flex justify-end">
-                        <button type="submit" class="btn" :class="isEditing ? 'btn-warning' : 'btn-primary'">
-                            {{ isEditing ? 'Edit' : 'Submit' }}
-                        </button>
-                    </div>
-                </form>
+            <!-- Input untuk mencari roles -->
+            <div class="flex justify-end">
+                <input 
+                    v-model="searchQuery" 
+                    type="text" 
+                    placeholder="Cari berdasarkan nama roles" 
+                    class="w-1/4 p-1 border rounded shadow bg-white">
             </div>
-        </dialog>
 
-        <!-- Tabel Daftar universitas -->
-        <div class="overflow-x-auto mt-4">
-            <table class="min-w-full bg-white shadow-md rounded-lg">
-                <thead class="text-black">
-                    <tr class="bg-gray-200">
-                        <th class="py-3 px-4 text-center">No</th>
-                        <th class="py-3 px-4 text-center">Role ID</th>
-                        <th class="py-3 px-4 text-center">Nama Roles</th>
-                        <th class="py-3 px-4 text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="hover">
-                    <tr v-for="(role, index) in computedRoles" :key="role.roleId" class="hover:bg-gray-50">
-                        <td class="border-b py-2 px-4 text-center">{{ index + 1 + (currentPage - 1) * perPage }}</td>
-                        <td class="border-b py-2 px-4 text-center">{{ role.roleId }}</td>
-                        <td class="border-b py-2 px-4 text-center">{{ role.roleName }}</td>
-                        <td class="border-b py-2 px-4 text-center">
-                        <div class="relative inline-block">
-                            <span class="tooltip">Edit</span>
-                            <button @click="editRole(role)" class="btn btn-sm btn-warning mr-2" title="Edit">
-                                <i class="fas fa-edit"></i>
+            <!-- Modal untuk tambah/edit roles -->
+            <dialog ref="myModal" class="modal">
+                <div class="modal-box">
+                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="closeModal">✕</button>
+                    <form @submit.prevent="submitRole" id="rolesForm" class="m-3">
+                        <div class="mb-4">
+                            <input v-model="role.roleId" type="text" placeholder="ID roles" class="hidden">
+                        </div>
+                        <div class="mb-4">
+                            <label for="inputRoles" class="block text-gray-700 font-semibold mb-2">Nama Roles</label>
+                            <input v-model="role.roleName" type="text" placeholder="Nama Roles" class="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit" class="btn" :class="isEditing ? 'btn-warning' : 'btn-primary'">
+                                {{ isEditing ? 'Edit' : 'Submit' }}
                             </button>
                         </div>
-                        <div class="relative inline-block">
-                            <span class="tooltip">Delete</span>
-                            <button @click="confirmDelete(role.roleId)" class="btn btn-sm btn-error" title="Delete">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                    </form>
+                </div>
+            </dialog>
 
-        <div class="flex justify-center mt-4">
-            <button 
-                @click="changePage(currentPage - 1)" 
-                :disabled="currentPage === 1" 
-                class="px-3 py-1 mx-1 rounded bg-red-500 text-white hover:bg-red-700"
-                :class="{'opacity-50 cursor-not-allowed': currentPage === 1}">
-                Previous
-            </button>
-            <span class="px-3 py-1 mx-1">{{ currentPage }} / {{ totalPages }}</span>
-            <button 
-                @click="changePage(currentPage + 1)" 
-                :disabled="currentPage === totalPages || totalItems <= perPage" 
-                class="px-3 py-1 mx-1 rounded bg-blue-500 text-white hover:bg-blue-700"
-                :class="{'opacity-50 cursor-not-allowed': currentPage === totalPages || totalItems <= perPage}">
-                Next
-            </button>
-        </div>
+            <!-- Tabel Daftar Universitas -->
+            <div class="overflow-x-auto mt-4">
+                <table class="min-w-full bg-white shadow-md rounded-lg">
+                    <thead class="text-black">
+                        <tr class="bg-gray-200">
+                            <th class="py-3 px-4 text-center">No</th>
+                            <th class="py-3 px-4 text-center">Role ID</th>
+                            <th class="py-3 px-4 text-center">Nama Roles</th>
+                            <th class="py-3 px-4 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="hover">
+                        <tr v-for="(role, index) in computedRoles" :key="role.roleId" class="hover:bg-gray-50">
+                            <td class="border-b py-2 px-4 text-center">{{ index + 1 + (currentPage - 1) * perPage }}</td>
+                            <td class="border-b py-2 px-4 text-center">{{ role.roleId }}</td>
+                            <td class="border-b py-2 px-4 text-center">{{ role.roleName }}</td>
+                            <td class="border-b py-2 px-4 text-center">
+                                <button @click="editRole(role)" class="btn btn-sm btn-warning mr-2">
+                                    <i class="fas fa-edit text-white"></i>
+                                </button>
+                                <button @click="confirmDelete(role.roleId)" class="btn btn-sm btn-error">
+                                    <i class="fas fa-trash-alt text-white"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex justify-center mt-4">
+                <button 
+                    @click="changePage(currentPage - 1)" 
+                    :disabled="currentPage === 1" 
+                    class="px-3 py-1 mx-1 rounded bg-red-500 text-white hover:bg-red-700"
+                    :class="{'opacity-50 cursor-not-allowed': currentPage === 1}">
+                    Previous
+                </button>
+                <span class="px-3 py-1 mx-1">{{ currentPage }} / {{ totalPages }}</span>
+                <button 
+                    @click="changePage(currentPage + 1)" 
+                    :disabled="currentPage === totalPages || totalItems <= perPage" 
+                    class="px-3 py-1 mx-1 rounded bg-blue-500 text-white hover:bg-blue-700"
+                    :class="{'opacity-50 cursor-not-allowed': currentPage === totalPages || totalItems <= perPage}">
+                    Next
+                </button>
+            </div>
+
+        </div> <!-- Akhir Wrapper -->
     </div>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -114,25 +114,23 @@ export default {
             perPage: 5,
             totalItems: 0,
             totalPages: 0,
-            searchQuery: '', // Tambahkan data untuk menyimpan input pencarian
+            searchQuery: '', // Menyimpan input pencarian
         };
     },
     mounted() {
         this.fetchRoles();
     },
-
     computed: {
         computedRoles() {
             const start = (this.currentPage - 1) * this.perPage;
             const filteredRoles = this.roles.filter(role => 
                 role.roleName.toLowerCase().includes(this.searchQuery.toLowerCase())
             );
-            this.totalItems = filteredRoles.length; // Update total items
-            this.totalPages = Math.ceil(this.totalItems / this.perPage); // Update total pages
+            this.totalItems = filteredRoles.length; 
+            this.totalPages = Math.ceil(this.totalItems / this.perPage);
             return filteredRoles.slice(start, start + this.perPage);
         },
     },
-
     methods: {
         fetchRoles() {
             axios
@@ -143,26 +141,12 @@ export default {
                 })
                 .then((response) => {
                     this.roles = response.data.data;
-                    this.totalItems = this.roles.length; // Menghitung total item
-                    this.totalPages = Math.ceil(this.totalItems / this.perPage); // Menghitung total halaman
+                    this.totalItems = this.roles.length; 
+                    this.totalPages = Math.ceil(this.totalItems / this.perPage);
                     this.changePage(1);
                 })
                 .catch((error) => {
                     console.error('Error fetching data:', error);
-                });
-        },
-        fetchRolesById(id) {
-            return axios
-                .get(`https://localhost:7241/api/Role/${id}`, {
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token1')
-                    }
-                })
-                .then((response) => {
-                    return response.data.data;
-                })
-                .catch((error) => {
-                    console.error('Error fetching university by ID:', error);
                 });
         },
         changePage(page) {
@@ -208,21 +192,21 @@ export default {
         updateRole() {
             axios
                 .put(`https://localhost:7241/api/Role/${this.role.roleId}`, this.role, {
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token1')
-            }
-        })
-        .then((response) => {
-            const index = this.roles.findIndex(r => r.roleId === this.role.roleId);
-            if (index !== -1) {
-                this.roles[index] = response.data.data;
-            }
-            this.closeModal();
-            Swal.fire('Success', 'Role updated successfully!', 'success');
-        })
-        .catch((error) => {
-            console.error('Error updating role:', error);
-        });
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token1')
+                    }
+                })
+                .then((response) => {
+                    const index = this.roles.findIndex(r => r.roleId === this.role.roleId);
+                    if (index !== -1) {
+                        this.roles[index] = response.data.data;
+                    }
+                    this.closeModal();
+                    Swal.fire('Success', 'Role updated successfully!', 'success');
+                })
+                .catch((error) => {
+                    console.error('Error updating role:', error);
+                });
         },
         confirmDelete(roleId) {
             Swal.fire({
@@ -259,13 +243,10 @@ export default {
 </script>
 
 <style scoped>
-.modal {
-    /* Style untuk modal */
-}
 .tooltip {
     display: inline-block;
     position: absolute;
-    bottom: 120%; /* Posisi di atas tombol */
+    bottom: 120%; 
     left: 50%;
     transform: translateX(-50%);
     background-color: black;

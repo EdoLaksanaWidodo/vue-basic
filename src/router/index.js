@@ -8,19 +8,26 @@ import Universitas from '../components/Pages/Universitas.vue';
 import Register from '../components/Pages/Register.vue';
 import Role from '../components/Pages/Role.vue';
 import AkunRole from '../components/Pages/AkunRole.vue';
+import NotFound from '../components/Pages/NotFound.vue';
 import Swal from 'sweetalert2';
 
-// Middleware untuk memeriksa autentikasi
+// Function to check if user is authenticated
 const isAuthenticated = () => {
-  return !!localStorage.getItem('token1'); // Ganti 'token1' dengan kunci yang sesuai
+  return !!localStorage.getItem('token1');
 };
 
 const routes = [
   {
-    path: '/',
+    path: '/login',
     name: 'Login',
     component: Login,
-    props: true,
+    beforeEnter: (to, from, next) => {
+      if (isAuthenticated()) {
+        next({ name: 'dashboard' });
+      } else {
+        next();
+      }
+    },
   },
   {
     path: '/dashboard',
@@ -36,7 +43,7 @@ const routes = [
           title: 'Akses Ditolak',
           text: 'Anda harus login untuk mengakses halaman ini',
         }).then(() => {
-          next({ name: 'Login' }); // Arahkan ke halaman login
+          next({ name: 'Login' });
         });
       } else {
         next();
@@ -58,7 +65,7 @@ const routes = [
               title: 'Akses Ditolak',
               text: 'Anda harus login untuk mengakses halaman ini',
             }).then(() => {
-              next({ name: 'Login' }); // Arahkan ke halaman login
+              next({ name: 'Login' });
             });
           } else {
             next();
@@ -76,7 +83,7 @@ const routes = [
               title: 'Akses Ditolak',
               text: 'Anda harus login untuk mengakses halaman ini',
             }).then(() => {
-              next({ name: 'Login' }); // Arahkan ke halaman login
+              next({ name: 'Login' });
             });
           } else {
             next();
@@ -94,7 +101,7 @@ const routes = [
               title: 'Akses Ditolak',
               text: 'Anda harus login untuk mengakses halaman ini',
             }).then(() => {
-              next({ name: 'Login' }); // Arahkan ke halaman login
+              next({ name: 'Login' });
             });
           } else {
             next();
@@ -112,7 +119,7 @@ const routes = [
               title: 'Akses Ditolak',
               text: 'Anda harus login untuk mengakses halaman ini',
             }).then(() => {
-              next({ name: 'Login' }); // Arahkan ke halaman login
+              next({ name: 'Login' });
             });
           } else {
             next();
@@ -130,7 +137,7 @@ const routes = [
               title: 'Akses Ditolak',
               text: 'Anda harus login untuk mengakses halaman ini',
             }).then(() => {
-              next({ name: 'Login' }); // Arahkan ke halaman login
+              next({ name: 'Login' });
             });
           } else {
             next();
@@ -148,7 +155,7 @@ const routes = [
               title: 'Akses Ditolak',
               text: 'Anda harus login untuk mengakses halaman ini',
             }).then(() => {
-              next({ name: 'Login' }); // Arahkan ke halaman login
+              next({ name: 'Login' });
             });
           } else {
             next();
@@ -156,7 +163,12 @@ const routes = [
         },
       },
     ]
-  }  
+  },
+  {
+    path: '/:catchAll(.*)', // Catch-all route for handling 404
+    name: 'NotFound',
+    component: NotFound,
+  }
 ];
 
 const router = createRouter({

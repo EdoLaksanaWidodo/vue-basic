@@ -28,11 +28,12 @@
                     <li>
                         <router-link to="/dashboard" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18V3H3z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z" />
                             </svg>
                             <span>Dashboard</span>
                         </router-link>
                     </li>
+
                     <!-- <li>
                         <router-link to="/home" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -41,14 +42,14 @@
                             <span>Home</span>
                         </router-link>
                     </li> -->
-                    <li>
+                    <!-- <li>
                         <router-link to="/about" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A4.992 4.992 0 005 20a5 5 0 0010 0c0-.597-.104-1.17-.294-1.707M15 5a5 5 0 00-10 0v4h10V5zM5 9v2a5 5 0 0010 0V9H5z" />
                             </svg>
                             <span>About</span>
                         </router-link>
-                    </li>
+                    </li> -->
                     <li>
                         <router-link to="/universitas" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition-colors duration-200">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
